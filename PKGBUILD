@@ -4,8 +4,8 @@
 
 # shellcheck disable=SC2034
 _distro="life"
-pkgname=${_distro}-keyring
-_tag="20220729" # git rev-parse ${pkgver}
+pkgname="${_distro}-keyring"
+_tag="20220730" # git rev-parse ${pkgver}
 pkgver="$(date +%Y.%m.%d)"
 pkgrel=1
 pkgdesc='Life PGP keyring'
