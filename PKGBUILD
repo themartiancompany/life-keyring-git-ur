@@ -5,7 +5,7 @@
 # shellcheck disable=SC2034
 _distro="life"
 pkgname=${_distro}-keyring
-_tag="20220728" # git rev-parse ${pkgver}
+_tag="20220729" # git rev-parse ${pkgver}
 pkgver="$(date +%Y.%m.%d)"
 pkgrel=1
 pkgdesc='Life PGP keyring'
@@ -35,7 +35,7 @@ check() {
 }
 
 package() {
-  cd "${_pkgname}" || exit
+  cd "${pkgname}" || exit
 
   # shellcheck disable=SC2154
   make PREFIX='/usr' DESTDIR="${pkgdir}" install
