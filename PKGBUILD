@@ -19,60 +19,109 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Maintainer: Truocolo <truocolo@aol.com>
-# Maintainer: Truocolo <truocolo@0x6E5163fC4BFc1511Dbe06bB605cc14a3e462332b>
-# Maintainer: Pellegrino Prevete (dvorak) <pellegrinoprevete@gmail.com>
-# Maintainer: Pellegrino Prevete (dvorak) <dvorak@0x87003Bd6C074C713783df04f36517451fF34CBEf>
-# Contributor: Pierre Schmitz <pierre@archlinux.de>
-# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Maintainer:
+#   Truocolo
+#     <truocolo@aol.com>
+#     <truocolo@0x6E5163fC4BFc1511Dbe06bB605cc14a3e462332b>
+# Maintainer:
+#   Pellegrino Prevete (dvorak)
+#     <pellegrinoprevete@gmail.com>
+#     <dvorak@0x87003Bd6C074C713783df04f36517451fF34CBEf>
+# Contributor:
+#   Pierre Schmitz
+#     <pierre@archlinux.de>
+# Contributor:
+#   Bartłomiej Piotrowski
+#     <bpiotrowski@archlinux.org>
 
 # shellcheck disable=SC2034
+if [[ ! -v "_git" ]]; then
+  _git="true"
+fi
 if [[ ! -v "_offline" ]]; then
   _offline="true"
 fi
+if [[ ! -v "_ssh" ]]; then
+  _ssh="false"
+fi
+_py="python"
+_proj="hip"
 _distro="life"
-pkgbase="${_distro}-keyring"
+_component="keyring"
+_pkg="${_distro}-${_component}"
+pkgbase="${_pkg}-git"
 pkgname=(
   "${pkgbase}"
 )
-_tag="20220731" # git rev-parse ${pkgver}
+_tag="20250523" # git rev-parse ${pkgver}
 pkgver="${_tag}" # "$(date +%Y.%m.%d)"
 pkgrel=1
-pkgdesc='Life PGP keyring.'
+_pkgdesc=(
+  'Life PGP keyring.'
+)
+pkgdesc="${_pkgdesc[*]}"
 arch=(
   'any'
 )
-_url="ssh://${_distro}_local_git/home/git/${pkgbase}"
-url="https://gitlab.${_distro}.org/${_distro}/${pkgbase}"
+_http="https://gitlab.${_proj}.org/${_proj}/${_pkg}"
+_http="https://github.com"
+_ns="themartiancompany"
+url="${_http}/${_ns}/${_pkg}"
 license=(
   'GPL3'
 )
 groups=(
   'base-devel'
-  'hip'
+  "${_proj}"
 )
-install="${pkgname}.install"
+install="${_pkg}.install"
 depends=(
-  'pacman'
+  "pacman"
 )
 makedepends=(
-  'git'
-  'python'
+  "${_py}"
   'sequoia-sq'
 )
+if [[ "${_git}" == "true" ]]; then
+  makedepends+=(
+    "git"
+  )
+fi
 checkdepends=(
-  'python-coverage'
-  'python-pytest'
+  "${_py}-coverage"
+  "${_py}-pytest"
 )
+_branch="main"
+_tag="${_branch}"
+_tag_name="branch"
+_tarname="${_pkg}-${_tag}"
+_url="${url}"
+if [[ "${_offline}" == "true" ]]; then
+  _url="file://${HOME}/${_pkg}"
+fi
+if [[ "${_ssh}" == "true" ]]; then
+  _url="ssh://${_distro}_local_git/home/git/${_pkg}"
+fi
+if [[ "${_git}" == "true" ]]; then
+  _uri="git+${_url}#${_tag_name}=${_tag}"
+  _src="${_tarname}::${_uri}"
+elif [[ "${_git}" == "false" ]]; then
+  _src="${_tarname}.tar.xz::${_uri}"
+fi
 source=(
-  "${pkgname}::git+${_url}#tag=${_tag}?signed"
+  "${_src}"
 )
 sha256sums=(
   'SKIP'
 )
 validpgpkeys=(
   # Pellegrino Prevete
-  '3D115DD206D92A0656C827BC8B686E3C22E4C2FA'
+  #   <pellegrinoprevete@gmail.com>
+  # '3D115DD206D92A0656C827BC8B686E3C22E4C2FA'
+  # Pellegrino Prevete (dvorak)
+  #   <dvorak@0x87003Bd6C074C713783df04f36517451fF34CBEf>
+  '12D8E3D7888F741E89F86EE0FEC8567A644F1D16'
+
 )
 
 build() {
